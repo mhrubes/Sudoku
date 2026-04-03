@@ -15,6 +15,16 @@ function copyGrid(g: number[][]): number[][] {
   return g.map((row) => [...row])
 }
 
+function formatElapsed(totalSec: number): string {
+  const h = Math.floor(totalSec / 3600)
+  const m = Math.floor((totalSec % 3600) / 60)
+  const s = totalSec % 60
+  if (h > 0) {
+    return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+  }
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+}
+
 type SeqHint = 'ok' | 'bad'
 
 function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
@@ -36,7 +46,16 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   const [sequentialUsesLeft, setSequentialUsesLeft] = useState(() =>
     getSequentialCheckLimit(difficulty),
   )
+  const [elapsedSec, setElapsedSec] = useState(0)
   const seqTimersRef = useRef<number[]>([])
+
+  useEffect(() => {
+    if (isSolved) return
+    const id = window.setInterval(() => {
+      setElapsedSec((sec) => sec + 1)
+    }, 1000)
+    return () => clearInterval(id)
+  }, [isSolved])
 
   const clearSeqTimers = useCallback(() => {
     seqTimersRef.current.forEach((id) => clearTimeout(id))
@@ -219,17 +238,24 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   return (
     <div className="py-2 py-md-4">
       <div className="container-fluid px-2 px-sm-3 mx-auto" style={{ maxWidth: 520 }}>
-        <div className="row g-2 g-md-3 align-items-center mb-3">
-          <div className="col-12 col-md-auto">
-            <Link to="/" className="btn btn-outline-secondary btn-sm">
-              {t('game.back')}
-            </Link>
+        <div className="game-toolbar mb-3">
+          <Link
+            to="/"
+            className="btn btn-outline-secondary btn-sm game-toolbar__back"
+          >
+            {t('game.back')}
+          </Link>
+          <div
+            className="game-toolbar__timer font-monospace tabular-nums"
+            role="timer"
+            aria-live="polite"
+            aria-label={t('game.timerAria')}
+          >
+            {formatElapsed(elapsedSec)}
           </div>
-          <div className="col-12 col-md text-md-end">
-            <span className="text-muted small d-block">
-              {t('game.level')} {diffLabel}
-            </span>
-          </div>
+          <span className="text-muted small game-toolbar__level">
+            {t('game.level')} {diffLabel}
+          </span>
         </div>
 
         <div className="sudoku-board mx-auto mb-3 mb-md-4" role="grid" aria-label={t('game.grid')}>

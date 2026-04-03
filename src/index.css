@@ -113,6 +113,7 @@ html[data-bs-theme='dark'] body {
   flex-wrap: wrap;
   justify-content: flex-end;
   max-width: calc(100vw - 1rem);
+  touch-action: manipulation;
 }
 
 @media (min-width: 576px) {
@@ -161,6 +162,30 @@ html[data-bs-theme='dark'] body {
   box-sizing: border-box;
 }
 
+.sudoku-numpad {
+  width: min(100%, 440px);
+  max-width: 100%;
+}
+
+.sudoku-numpad__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.sudoku-numpad__digit {
+  min-height: 2.75rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  touch-action: manipulation;
+}
+
+.sudoku-numpad__clear {
+  min-height: 2.5rem;
+  touch-action: manipulation;
+}
+
 .game-actions {
   display: grid;
   grid-template-columns: 1fr;
@@ -187,6 +212,8 @@ html[data-bs-theme='dark'] body {
   cursor: pointer;
   outline: none;
   box-sizing: border-box;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   border-right: 1px solid #adb5bd;
   border-bottom: 1px solid #adb5bd;
   transition:

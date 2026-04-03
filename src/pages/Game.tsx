@@ -71,6 +71,33 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
     setActivePulse(null)
   }, [])
 
+  const applyDigitToSelection = useCallback(
+    (digit: number) => {
+      if (locked || !selected) return
+      const [r, c] = selected
+      if (fixed[r][c]) return
+      setValues((prev) => {
+        const next = copyGrid(prev)
+        next[r][c] = digit
+        return next
+      })
+      clearSeqHints()
+    },
+    [clearSeqHints, fixed, locked, selected],
+  )
+
+  const clearSelectedCell = useCallback(() => {
+    if (locked || !selected) return
+    const [r, c] = selected
+    if (fixed[r][c]) return
+    setValues((prev) => {
+      const next = copyGrid(prev)
+      next[r][c] = 0
+      return next
+    })
+    clearSeqHints()
+  }, [clearSeqHints, fixed, locked, selected])
+
   const handleCellClick = useCallback(
     (r: number, c: number) => {
       if (locked) return
@@ -80,6 +107,15 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
     [fixed, locked],
   )
 
+  const [showNumpad, setShowNumpad] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px), (pointer: coarse)')
+    const sync = () => setShowNumpad(mq.matches)
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
   useEffect(() => {
     if (locked || !selected) return
 
@@ -88,30 +124,25 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
       if (fixed[r][c]) return
 
       if (e.key >= '1' && e.key <= '9') {
-        const n = Number(e.key)
-        setValues((prev) => {
-          const next = copyGrid(prev)
-          next[r][c] = n
-          return next
-        })
-        clearSeqHints()
+        applyDigitToSelection(Number(e.key))
         e.preventDefault()
         return
       }
       if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') {
-        setValues((prev) => {
-          const next = copyGrid(prev)
-          next[r][c] = 0
-          return next
-        })
-        clearSeqHints()
+        clearSelectedCell()
         e.preventDefault()
       }
     }
 
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [clearSeqHints, fixed, locked, selected])
+  }, [
+    applyDigitToSelection,
+    clearSelectedCell,
+    fixed,
+    locked,
+    selected,
+  ])
 
   const userFilledCount = useMemo(() => {
     let n = 0
@@ -278,6 +309,44 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
             }),
           )}
         </div>
+
+        {showNumpad && (
+          <div
+            className="sudoku-numpad mx-auto mb-3"
+            role="group"
+            aria-label={t('game.numpadAria')}
+          >
+            <div className="sudoku-numpad__grid">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  className="btn btn-outline-primary sudoku-numpad__digit"
+                  disabled={
+                    locked ||
+                    !selected ||
+                    (selected !== null && fixed[selected[0]][selected[1]])
+                  }
+                  onClick={() => applyDigitToSelection(d)}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="btn btn-outline-secondary w-100 sudoku-numpad__clear"
+              disabled={
+                locked ||
+                !selected ||
+                (selected !== null && fixed[selected[0]][selected[1]])
+              }
+              onClick={clearSelectedCell}
+            >
+              {t('game.clearCell')}
+            </button>
+          </div>
+        )}
 
         <div className="game-actions">
           <button

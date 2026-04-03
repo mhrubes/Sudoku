@@ -12,6 +12,8 @@ export type MessageTree = {
     checking: string
     help: string
     timerAria: string
+    numpadAria: string
+    clearCell: string
   }
   theme: {
     lightTitle: string
@@ -52,8 +54,10 @@ export const messages: Record<Locale, MessageTree> = {
       finish: 'Dokončit',
       checking: 'Kontroluji…',
       help:
-        'Klikněte na prázdné políčko a zadejte číslici 1–9 (Backspace smaže). Postupná kontrola projde vaše vyplněná pole a zvýrazní správná zeleně a chybná červeně.',
+        'Klikněte na prázdné políčko a zadejte číslici 1–9 (Backspace smaže). Na mobilu použijte číselník pod mřížkou. Postupná kontrola projde vaše vyplněná pole a zvýrazní správná zeleně a chybná červeně.',
       timerAria: 'Uplynulý čas hry',
+      numpadAria: 'Zadání číslice',
+      clearCell: 'Smazat',
     },
     theme: {
       lightTitle: 'Světlý režim',
@@ -94,8 +98,10 @@ export const messages: Record<Locale, MessageTree> = {
       finish: 'Finish',
       checking: 'Checking…',
       help:
-        'Click an empty cell and enter a digit 1–9 (Backspace clears). Step-by-step check goes through your filled cells and highlights correct answers in green and wrong ones in red.',
+        'Click an empty cell and enter a digit 1–9 (Backspace clears). On mobile, use the keypad below the grid. Step-by-step check goes through your filled cells and highlights correct answers in green and wrong ones in red.',
       timerAria: 'Elapsed play time',
+      numpadAria: 'Digit entry',
+      clearCell: 'Clear',
     },
     theme: {
       lightTitle: 'Light mode',
@@ -136,8 +142,10 @@ export const messages: Record<Locale, MessageTree> = {
       finish: 'Dokončiť',
       checking: 'Kontrolujem…',
       help:
-        'Kliknite na prázdne políčko a zadajte číslicu 1–9 (Backspace vymaže). Postupná kontrola prejde vaše vyplnené polia a zvýrazní správne zelenou a nesprávne červenou.',
+        'Kliknite na prázdne políčko a zadajte číslicu 1–9 (Backspace vymaže). Na mobile použite číselník pod mriežkou. Postupná kontrola prejde vaše vyplnené polia a zvýrazní správne zelenou a nesprávne červenou.',
       timerAria: 'Čas hrania',
+      numpadAria: 'Zadanie číslice',
+      clearCell: 'Zmazať',
     },
     theme: {
       lightTitle: 'Svetlý režim',

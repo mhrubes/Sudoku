@@ -1,0 +1,182 @@
+#root {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0 auto;
+}
+
+body {
+  margin: 0;
+}
+
+html[data-bs-theme='light'] body {
+  background: #f8f9fa;
+  color: #212529;
+}
+
+html[data-bs-theme='dark'] body {
+  background: #212529;
+  color: #e9ecef;
+}
+
+.app-top-controls {
+  position: fixed;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-toggle-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.sudoku-board {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  width: min(92vw, 440px);
+  aspect-ratio: 1;
+  border: 3px solid #212529;
+  box-sizing: border-box;
+}
+
+.sudoku-cell {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-size: clamp(1rem, 4vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  outline: none;
+  box-sizing: border-box;
+  border-right: 1px solid #adb5bd;
+  border-bottom: 1px solid #adb5bd;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.sudoku-thick-right {
+  border-right: 2px solid #212529;
+}
+
+.sudoku-thick-bottom {
+  border-bottom: 2px solid #212529;
+}
+
+.sudoku-cell:nth-child(9n) {
+  border-right: none;
+}
+
+.sudoku-cell:nth-child(n + 73) {
+  border-bottom: none;
+}
+
+.sudoku-given {
+  background: #e9ecef;
+  color: #212529;
+  cursor: default;
+}
+
+.sudoku-editable {
+  background: #fff;
+  color: #0d6efd;
+}
+
+.sudoku-editable:disabled {
+  opacity: 1;
+}
+
+.sudoku-selected.sudoku-editable:not(:disabled) {
+  box-shadow: inset 0 0 0 3px #0d6efd;
+  background: #e7f1ff;
+}
+
+.sudoku-seq-ok {
+  background: #d1e7dd !important;
+  color: #0f5132 !important;
+}
+
+.sudoku-seq-bad {
+  background: #f8d7da !important;
+  color: #842029 !important;
+}
+
+.sudoku-seq-pulse {
+  animation: sudoku-seq-pulse 0.38s ease-out;
+  z-index: 1;
+}
+
+@keyframes sudoku-seq-pulse {
+  0% {
+    filter: brightness(1.15);
+    box-shadow: inset 0 0 0 3px rgba(25, 135, 84, 0.55);
+  }
+  50% {
+    filter: brightness(1.08);
+  }
+  100% {
+    filter: brightness(1);
+    box-shadow: none;
+  }
+}
+
+.sudoku-seq-bad.sudoku-seq-pulse {
+  animation: sudoku-seq-pulse-bad 0.38s ease-out;
+}
+
+@keyframes sudoku-seq-pulse-bad {
+  0% {
+    filter: brightness(1.12);
+    box-shadow: inset 0 0 0 3px rgba(220, 53, 69, 0.55);
+  }
+  100% {
+    filter: brightness(1);
+    box-shadow: none;
+  }
+}
+
+html[data-bs-theme='dark'] .sudoku-board {
+  border-color: #dee2e6;
+}
+
+html[data-bs-theme='dark'] .sudoku-cell {
+  border-right-color: #495057;
+  border-bottom-color: #495057;
+}
+
+html[data-bs-theme='dark'] .sudoku-thick-right {
+  border-right-color: #dee2e6;
+}
+
+html[data-bs-theme='dark'] .sudoku-thick-bottom {
+  border-bottom-color: #dee2e6;
+}
+
+html[data-bs-theme='dark'] .sudoku-given {
+  background: #343a40;
+  color: #f8f9fa;
+}
+
+html[data-bs-theme='dark'] .sudoku-editable {
+  background: #212529;
+  color: #6ea8fe;
+}
+
+html[data-bs-theme='dark'] .sudoku-selected.sudoku-editable:not(:disabled) {
+  box-shadow: inset 0 0 0 3px #6ea8fe;
+  background: #1a2b4a;
+}
+
+html[data-bs-theme='dark'] .sudoku-seq-ok {
+  background: #155724 !important;
+  color: #d1e7dd !important;
+}
+
+html[data-bs-theme='dark'] .sudoku-seq-bad {
+  background: #842029 !important;
+  color: #f8d7da !important;
+}

@@ -25,6 +25,21 @@ function formatElapsed(totalSec: number): string {
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 }
 
+/** Kratší prodlevy při větším počtu vyplněných polí, aby kontrola netrvala nepřiměřeně dlouho. */
+function getSequentialStepDelays(cellCount: number): {
+  pulseMs: number
+  gapMs: number
+} {
+  if (cellCount <= 5) {
+    return { pulseMs: 400, gapMs: 140 }
+  }
+  const extra = cellCount - 5
+  return {
+    pulseMs: Math.max(155, 400 - extra * 22),
+    gapMs: Math.max(26, 140 - extra * 10),
+  }
+}
+
 type SeqHint = 'ok' | 'bad'
 
 function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
@@ -208,6 +223,8 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
     clearSeqHints()
     setSequentialRunning(true)
 
+    const { pulseMs, gapMs } = getSequentialStepDelays(cells.length)
+
     const schedule = (index: number) => {
       if (index >= cells.length) {
         setSequentialRunning(false)
@@ -224,9 +241,9 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
 
       const t1 = window.setTimeout(() => {
         setActivePulse(null)
-        const t2 = window.setTimeout(() => schedule(index + 1), 140)
+        const t2 = window.setTimeout(() => schedule(index + 1), gapMs)
         seqTimersRef.current.push(t2)
-      }, 400)
+      }, pulseMs)
       seqTimersRef.current.push(t1)
     }
 

@@ -103,6 +103,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   const [elapsedSec, setElapsedSec] = useState(0)
   const seqTimersRef = useRef<number[]>([])
   const selectedBtnRef = useRef<HTMLButtonElement | null>(null)
+  const playSurfaceRef = useRef<HTMLDivElement | null>(null)
   const [boxTooltipPos, setBoxTooltipPos] = useState<{
     top: number
     left: number
@@ -257,6 +258,19 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
       window.removeEventListener('scroll', update, true)
     }
   }, [showBoxTooltip, selected, values, missingInBox])
+
+  useEffect(() => {
+    const onPointerDown = (e: PointerEvent) => {
+      if (selected === null || locked) return
+      const root = playSurfaceRef.current
+      if (!root) return
+      const target = e.target
+      if (target instanceof Node && root.contains(target)) return
+      setSelected(null)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    return () => document.removeEventListener('pointerdown', onPointerDown)
+  }, [locked, selected])
 
   const handleCheck = useCallback(async () => {
     if (locked) return
@@ -414,6 +428,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
           </span>
         </div>
 
+        <div ref={playSurfaceRef} className="game-play-surface">
         <div className="sudoku-board mx-auto mb-3 mb-md-4" role="grid" aria-label={t('game.grid')}>
           {values.flatMap((row, r) =>
             row.map((cell, c) => {
@@ -542,6 +557,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
           >
             {isValidating ? t('game.checking') : t('game.finish')}
           </button>
+        </div>
         </div>
 
         <p className="text-center text-muted small mt-3 mb-0 px-1 lh-sm game-help">

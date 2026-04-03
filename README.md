@@ -33,8 +33,8 @@ V kořeni projektu můžeš vytvořit soubor **`.env`** (není v gitu; šablonu 
 | Proměnná | Význam |
 |----------|--------|
 | `VITE_SEQUENTIAL_CHECK_EASY` | Max. počet použití **Postupná kontrola** na jednu hru — **lehká** obtížnost |
-| `VITE_SEQUENTIAL_CHECK_MEDIUM` | Stejné pro **střední** obtížnost |
-| `VITE_SEQUENTIAL_CHECK_HARD` | Stejné pro **těžkou** obtížnost |
+| `VITE_SEQUENTIAL_CHECK_MEDIUM` | Max. počet použití **Postupná kontrola** na jednu hru — **střední** obtížnost |
+| `VITE_SEQUENTIAL_CHECK_HARD` | Max. počet použití **Postupná kontrola** na jednu hru — **těžká** obtížnost |
 
 - Pokud proměnná **chybí**, je **prázdná**, nebo hodnota **není nezáporné celé číslo**, použije se výchozí **`5`**.
 - Hodnota **`0`** znamená, že je postupná kontrola pro danou obtížnost **vypnutá** (tlačítko od začátku neaktivní).

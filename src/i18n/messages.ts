@@ -33,6 +33,12 @@ export type MessageTree = {
   lang: {
     pickerAria: string
   }
+  hints: {
+    boxTooltipOnTitle: string
+    boxTooltipOffTitle: string
+    boxTooltipOnAria: string
+    boxTooltipOffAria: string
+  }
 }
 
 export const messages: Record<Locale, MessageTree> = {
@@ -81,6 +87,12 @@ export const messages: Record<Locale, MessageTree> = {
     lang: {
       pickerAria: 'Jazyk aplikace',
     },
+    hints: {
+      boxTooltipOnTitle: 'Zapnout nápovědu u bloku',
+      boxTooltipOffTitle: 'Vypnout nápovědu u bloku',
+      boxTooltipOnAria: 'Zapnout zobrazení chybějících číslic v označeném 3×3 bloku',
+      boxTooltipOffAria: 'Vypnout nápovědu u políčka',
+    },
   },
   en: {
     home: {
@@ -127,6 +139,12 @@ export const messages: Record<Locale, MessageTree> = {
     lang: {
       pickerAria: 'App language',
     },
+    hints: {
+      boxTooltipOnTitle: 'Turn on box hints',
+      boxTooltipOffTitle: 'Turn off box hints',
+      boxTooltipOnAria: 'Show which digits are still missing in the 3×3 box',
+      boxTooltipOffAria: 'Hide the hint above the selected cell',
+    },
   },
   sk: {
     home: {
@@ -172,6 +190,12 @@ export const messages: Record<Locale, MessageTree> = {
     },
     lang: {
       pickerAria: 'Jazyk aplikácie',
+    },
+    hints: {
+      boxTooltipOnTitle: 'Zapnúť nápovedu pri bloku',
+      boxTooltipOffTitle: 'Vypnúť nápovedu pri bloku',
+      boxTooltipOnAria: 'Zapnúť zobrazenie chýbajúcich číslic v označenom 3×3 bloku',
+      boxTooltipOffAria: 'Vypnúť nápovedu pri políčku',
     },
   },
 }

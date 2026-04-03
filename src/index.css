@@ -123,14 +123,16 @@ html[data-bs-theme='dark'] body {
   }
 }
 
-.theme-toggle-btn {
+.theme-toggle-btn,
+.box-tooltip-toggle-btn {
   width: 2.4rem;
   height: 2.4rem;
   flex-shrink: 0;
 }
 
 @media (min-width: 576px) {
-  .theme-toggle-btn {
+  .theme-toggle-btn,
+  .box-tooltip-toggle-btn {
     width: 2.5rem;
     height: 2.5rem;
   }

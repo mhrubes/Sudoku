@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { AppTopBar } from './components/AppTopBar'
 import { ToastHost } from './components/ToastHost'
 import { I18nProvider } from './i18n/I18nProvider'
+import { BoxTooltipPreferenceProvider } from './preferences/BoxTooltipPreferenceContext'
 import { ThemeProvider } from './theme/ThemeProvider'
 import './index.css'
 import App from './App.tsx'
@@ -17,8 +18,10 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <I18nProvider>
         <ThemeProvider>
-          <AppTopBar />
-          <App />
+          <BoxTooltipPreferenceProvider>
+            <AppTopBar />
+            <App />
+          </BoxTooltipPreferenceProvider>
           <ToastHost />
           <Analytics />
           <SpeedInsights />

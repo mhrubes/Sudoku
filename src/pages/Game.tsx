@@ -11,6 +11,7 @@ import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { getSequentialCheckLimit } from '../config'
 import { useI18n } from '../i18n/I18nContext'
+import { useBoxTooltipPreference } from '../preferences/BoxTooltipPreferenceContext'
 import {
   type Difficulty,
   generatePuzzle,
@@ -70,6 +71,7 @@ type SeqHint = 'ok' | 'bad'
 
 function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   const { t } = useI18n()
+  const { boxTooltipEnabled } = useBoxTooltipPreference()
   const { solution, puzzle } = useMemo(() => generatePuzzle(difficulty), [difficulty])
   const fixed = useMemo(
     () => puzzle.map((row) => row.map((cell) => cell !== 0)),
@@ -221,6 +223,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   }, [selected, values])
 
   const showBoxTooltip =
+    boxTooltipEnabled &&
     selected !== null &&
     !locked &&
     !isImmutable[selected[0]][selected[1]]
@@ -257,7 +260,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
       window.removeEventListener('resize', update)
       window.removeEventListener('scroll', update, true)
     }
-  }, [showBoxTooltip, selected, values, missingInBox])
+  }, [boxTooltipEnabled, showBoxTooltip, selected, values, missingInBox])
 
   useEffect(() => {
     const onPointerDown = (e: PointerEvent) => {

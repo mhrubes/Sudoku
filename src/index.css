@@ -170,14 +170,8 @@ html[data-bs-theme='dark'] body {
   pointer-events: none;
 }
 
-.sudoku-box-tooltip__line {
-  display: block;
-  font-weight: 600;
-}
-
 .sudoku-box-tooltip__digits {
   display: block;
-  margin-top: 0.15rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;

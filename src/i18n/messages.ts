@@ -14,8 +14,7 @@ export type MessageTree = {
     timerAria: string
     numpadAria: string
     clearCell: string
-    boxTooltipMissing: string
-    boxTooltipComplete: string
+    boxTooltipAria: string
   }
   theme: {
     lightTitle: string
@@ -66,8 +65,7 @@ export const messages: Record<Locale, MessageTree> = {
       timerAria: 'Uplynulý čas hry',
       numpadAria: 'Zadání číslice',
       clearCell: 'Smazat',
-      boxTooltipMissing: 'V tomto bloku ještě chybí:',
-      boxTooltipComplete: 'V tomto bloku už jsou všechna čísla 1–9.',
+      boxTooltipAria: 'Chybějící číslice v bloku:',
     },
     theme: {
       lightTitle: 'Světlý režim',
@@ -118,8 +116,7 @@ export const messages: Record<Locale, MessageTree> = {
       timerAria: 'Elapsed play time',
       numpadAria: 'Digit entry',
       clearCell: 'Clear',
-      boxTooltipMissing: 'Still missing in this box:',
-      boxTooltipComplete: 'This box already has digits 1–9.',
+      boxTooltipAria: 'Missing digits in box:',
     },
     theme: {
       lightTitle: 'Light mode',
@@ -170,8 +167,7 @@ export const messages: Record<Locale, MessageTree> = {
       timerAria: 'Čas hrania',
       numpadAria: 'Zadanie číslice',
       clearCell: 'Zmazať',
-      boxTooltipMissing: 'V tomto bloku ešte chýba:',
-      boxTooltipComplete: 'V tomto bloku sú už všetky čísla 1–9.',
+      boxTooltipAria: 'Chýbajúce číslice v bloku:',
     },
     theme: {
       lightTitle: 'Svetlý režim',

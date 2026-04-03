@@ -229,7 +229,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
     !isImmutable[selected[0]][selected[1]]
 
   useLayoutEffect(() => {
-    if (!showBoxTooltip) {
+    if (!showBoxTooltip || missingInBox.length === 0) {
       setBoxTooltipPos(null)
       return
     }
@@ -452,7 +452,11 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
                   disabled={locked || isLocked}
                   className={`${cellClass(r, c)} ${kindClass}${hintClassFor(r, c)}`}
                   aria-describedby={
-                    showBoxTooltip && isSel ? 'sudoku-box-tooltip' : undefined
+                    showBoxTooltip &&
+                    isSel &&
+                    missingInBox.length > 0
+                      ? 'sudoku-box-tooltip'
+                      : undefined
                   }
                   onClick={() => handleCellClick(r, c)}
                 >
@@ -465,11 +469,13 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
 
         {showBoxTooltip &&
           boxTooltipPos &&
+          missingInBox.length > 0 &&
           createPortal(
             <div
               id="sudoku-box-tooltip"
               className="sudoku-box-tooltip"
               role="tooltip"
+              aria-label={`${t('game.boxTooltipAria')} ${missingInBox.join(', ')}`}
               style={{
                 position: 'fixed',
                 top: boxTooltipPos.top,
@@ -478,20 +484,9 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
                 zIndex: 1060,
               }}
             >
-              {missingInBox.length > 0 ? (
-                <>
-                  <span className="sudoku-box-tooltip__line">
-                    {t('game.boxTooltipMissing')}
-                  </span>
-                  <span className="sudoku-box-tooltip__digits">
-                    {missingInBox.join(' · ')}
-                  </span>
-                </>
-              ) : (
-                <span className="sudoku-box-tooltip__line">
-                  {t('game.boxTooltipComplete')}
-                </span>
-              )}
+              <span className="sudoku-box-tooltip__digits" aria-hidden>
+                {missingInBox.join(' · ')}
+              </span>
             </div>,
             document.body,
           )}

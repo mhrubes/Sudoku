@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { getSequentialCheckLimit } from '../config'
 import { useI18n } from '../i18n/I18nContext'
 import {
   type Difficulty,
@@ -32,6 +33,9 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   const [seqHints, setSeqHints] = useState<Record<string, SeqHint>>({})
   const [activePulse, setActivePulse] = useState<string | null>(null)
   const [sequentialRunning, setSequentialRunning] = useState(false)
+  const [sequentialUsesLeft, setSequentialUsesLeft] = useState(() =>
+    getSequentialCheckLimit(difficulty),
+  )
   const seqTimersRef = useRef<number[]>([])
 
   const clearSeqTimers = useCallback(() => {
@@ -127,6 +131,11 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   const handleSequentialCheck = useCallback(() => {
     if (locked) return
 
+    if (sequentialUsesLeft <= 0) {
+      toast.warning(t('toast.sequentialExhausted'), { position: 'top-center' })
+      return
+    }
+
     const cells: [number, number][] = []
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
@@ -142,6 +151,8 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
       })
       return
     }
+
+    setSequentialUsesLeft((n) => Math.max(0, n - 1))
 
     clearSeqTimers()
     clearSeqHints()
@@ -170,7 +181,16 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
     }
 
     schedule(0)
-  }, [clearSeqHints, clearSeqTimers, fixed, locked, solution, t, values])
+  }, [
+    clearSeqHints,
+    clearSeqTimers,
+    fixed,
+    locked,
+    sequentialUsesLeft,
+    solution,
+    t,
+    values,
+  ])
 
   const cellClass = useMemo(() => {
     return (r: number, c: number) => {
@@ -237,10 +257,17 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
           <button
             type="button"
             className="btn btn-outline-primary text-wrap"
-            disabled={locked || isSolved || userFilledCount === 0}
+            disabled={
+              locked ||
+              isSolved ||
+              userFilledCount === 0 ||
+              sequentialUsesLeft <= 0
+            }
             onClick={handleSequentialCheck}
           >
-            {sequentialRunning ? t('game.checking') : t('game.sequential')}
+            {sequentialRunning
+              ? t('game.checking')
+              : `${t('game.sequential')} (${sequentialUsesLeft})`}
           </button>
           <button
             type="button"

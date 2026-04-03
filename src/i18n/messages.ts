@@ -23,6 +23,7 @@ export type MessageTree = {
     solved: string
     wrong: string
     sequentialNeedCells: string
+    sequentialExhausted: string
   }
   lang: {
     pickerAria: string
@@ -64,6 +65,8 @@ export const messages: Record<Locale, MessageTree> = {
       wrong: 'Řešení není správné. Zkuste to znovu.',
       sequentialNeedCells:
         'Nejdřív vyplňte alespoň jedno pole (mimo zadaná čísla).',
+      sequentialExhausted:
+        'Dobrý pokus, ale už jsi vyčerpal počet postupných kontrol pro tuto hru.',
     },
     lang: {
       pickerAria: 'Jazyk aplikace',
@@ -103,6 +106,8 @@ export const messages: Record<Locale, MessageTree> = {
       wrong: 'The solution is not correct. Try again.',
       sequentialNeedCells:
         'Fill at least one cell first (other than the given numbers).',
+      sequentialExhausted:
+        "Nice try, but you've used all step-by-step checks for this game.",
     },
     lang: {
       pickerAria: 'App language',
@@ -142,6 +147,8 @@ export const messages: Record<Locale, MessageTree> = {
       wrong: 'Riešenie nie je správne. Skúste to znova.',
       sequentialNeedCells:
         'Najprv vyplňte aspoň jedno pole (mimo zadané čísla).',
+      sequentialExhausted:
+        'Dobrý pokus, ale už si vyčerpal počet postupných kontrol pre túto hru.',
     },
     lang: {
       pickerAria: 'Jazyk aplikácie',

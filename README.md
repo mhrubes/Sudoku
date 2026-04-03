@@ -15,3 +15,18 @@ npm run dev
 ```
 
 Produkční sestavení: `npm run build`, náhled: `npm run preview`.
+
+## Konfigurace (`.env`)
+
+V kořeni projektu můžeš vytvořit soubor **`.env`** (není v gitu; šablonu najdeš v **`.env.example`**, pokud ji v repozitáři máš). Vite do prohlížeče předává jen proměnné s prefixem **`VITE_`**. Po každé změně `.env` je potřeba **znovu spustit** `npm run dev` nebo znovu spustit build.
+
+| Proměnná | Význam |
+|----------|--------|
+| `VITE_SEQUENTIAL_CHECK_EASY` | Max. počet použití **Postupná kontrola** na jednu hru — **lehká** obtížnost |
+| `VITE_SEQUENTIAL_CHECK_MEDIUM` | Stejné pro **střední** obtížnost |
+| `VITE_SEQUENTIAL_CHECK_HARD` | Stejné pro **těžkou** obtížnost |
+
+- Pokud proměnná **chybí**, je **prázdná**, nebo hodnota **není nezáporné celé číslo**, použije se výchozí **`5`**.
+- Hodnota **`0`** znamená, že je postupná kontrola pro danou obtížnost **vypnutá** (tlačítko od začátku neaktivní).
+
+Hodnoty se načítají v **`src/config.ts`** při sestavení / startu dev serveru.

@@ -50,6 +50,19 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
     [puzzle],
   )
 
+  /** Buňky označené jako správné po dokončení postupné kontroly — chovají se jako zadaná pole. */
+  const [verifiedGiven, setVerifiedGiven] = useState<Record<string, true>>({})
+
+  const isImmutable = useMemo(() => {
+    const g: boolean[][] = Array.from({ length: 9 }, () => Array(9).fill(false))
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        g[r][c] = fixed[r][c] || Boolean(verifiedGiven[`${r}-${c}`])
+      }
+    }
+    return g
+  }, [fixed, verifiedGiven])
+
   const [values, setValues] = useState(() => copyGrid(puzzle))
   const [selected, setSelected] = useState<[number, number] | null>(null)
   const [isValidating, setIsValidating] = useState(false)
@@ -90,7 +103,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
     (digit: number) => {
       if (locked || !selected) return
       const [r, c] = selected
-      if (fixed[r][c]) return
+      if (isImmutable[r][c]) return
       setValues((prev) => {
         const next = copyGrid(prev)
         next[r][c] = digit
@@ -98,28 +111,28 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
       })
       clearSeqHints()
     },
-    [clearSeqHints, fixed, locked, selected],
+    [clearSeqHints, isImmutable, locked, selected],
   )
 
   const clearSelectedCell = useCallback(() => {
     if (locked || !selected) return
     const [r, c] = selected
-    if (fixed[r][c]) return
+    if (isImmutable[r][c]) return
     setValues((prev) => {
       const next = copyGrid(prev)
       next[r][c] = 0
       return next
     })
     clearSeqHints()
-  }, [clearSeqHints, fixed, locked, selected])
+  }, [clearSeqHints, isImmutable, locked, selected])
 
   const handleCellClick = useCallback(
     (r: number, c: number) => {
       if (locked) return
-      if (fixed[r][c]) return
+      if (isImmutable[r][c]) return
       setSelected([r, c])
     },
-    [fixed, locked],
+    [isImmutable, locked],
   )
 
   const [showNumpad, setShowNumpad] = useState(false)
@@ -136,7 +149,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
 
     const onKey = (e: KeyboardEvent) => {
       const [r, c] = selected
-      if (fixed[r][c]) return
+      if (isImmutable[r][c]) return
 
       if (e.key >= '1' && e.key <= '9') {
         applyDigitToSelection(Number(e.key))
@@ -154,7 +167,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   }, [
     applyDigitToSelection,
     clearSelectedCell,
-    fixed,
+    isImmutable,
     locked,
     selected,
   ])
@@ -163,11 +176,11 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
     let n = 0
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
-        if (!fixed[r][c] && values[r][c] !== 0) n++
+        if (!isImmutable[r][c] && values[r][c] !== 0) n++
       }
     }
     return n
-  }, [fixed, values])
+  }, [isImmutable, values])
 
   const handleCheck = useCallback(async () => {
     if (locked) return
@@ -204,7 +217,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
     const cells: [number, number][] = []
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
-        if (!fixed[r][c] && values[r][c] !== 0) {
+        if (!isImmutable[r][c] && values[r][c] !== 0) {
           cells.push([r, c])
         }
       }
@@ -227,8 +240,27 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
 
     const schedule = (index: number) => {
       if (index >= cells.length) {
-        setSequentialRunning(false)
+        setVerifiedGiven((prev) => {
+          const next = { ...prev }
+          for (const [r, c] of cells) {
+            if (values[r][c] === solution[r][c]) {
+              next[`${r}-${c}`] = true
+            }
+          }
+          return next
+        })
+        setSeqHints({})
         setActivePulse(null)
+        setSequentialRunning(false)
+        setSelected((sel) => {
+          if (!sel) return null
+          const [sr, sc] = sel
+          const wasInRun = cells.some(([r, c]) => r === sr && c === sc)
+          if (wasInRun && values[sr][sc] === solution[sr][sc]) {
+            return null
+          }
+          return sel
+        })
         return
       }
 
@@ -251,7 +283,7 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   }, [
     clearSeqHints,
     clearSeqTimers,
-    fixed,
+    isImmutable,
     locked,
     sequentialUsesLeft,
     solution,
@@ -309,15 +341,20 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
         <div className="sudoku-board mx-auto mb-3 mb-md-4" role="grid" aria-label={t('game.grid')}>
           {values.flatMap((row, r) =>
             row.map((cell, c) => {
-              const isFixed = fixed[r][c]
+              const isLocked = isImmutable[r][c]
+              const kindClass = fixed[r][c]
+                ? 'sudoku-given'
+                : verifiedGiven[`${r}-${c}`]
+                  ? 'sudoku-verified'
+                  : 'sudoku-editable'
               const show = cell !== 0 ? String(cell) : ''
               return (
                 <button
                   key={`${r}-${c}`}
                   type="button"
                   role="gridcell"
-                  disabled={locked || isFixed}
-                  className={`${cellClass(r, c)} ${isFixed ? 'sudoku-given' : 'sudoku-editable'}${hintClassFor(r, c)}`}
+                  disabled={locked || isLocked}
+                  className={`${cellClass(r, c)} ${kindClass}${hintClassFor(r, c)}`}
                   onClick={() => handleCellClick(r, c)}
                 >
                   {show}
@@ -342,7 +379,8 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
                   disabled={
                     locked ||
                     !selected ||
-                    (selected !== null && fixed[selected[0]][selected[1]])
+                    (selected !== null &&
+                      isImmutable[selected[0]][selected[1]])
                   }
                   onClick={() => applyDigitToSelection(d)}
                 >
@@ -356,7 +394,8 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
               disabled={
                 locked ||
                 !selected ||
-                (selected !== null && fixed[selected[0]][selected[1]])
+                (selected !== null &&
+                  isImmutable[selected[0]][selected[1]])
               }
               onClick={clearSelectedCell}
             >

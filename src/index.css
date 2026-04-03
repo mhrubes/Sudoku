@@ -243,6 +243,13 @@ html[data-bs-theme='dark'] body {
   cursor: default;
 }
 
+/* Ověřená správná pole po postupné kontrole — odlišná od výchozích zadaných čísel */
+.sudoku-verified {
+  background: #e2f0e8;
+  color: #146c43;
+  cursor: default;
+}
+
 .sudoku-editable {
   background: #fff;
   color: #0d6efd;
@@ -321,6 +328,11 @@ html[data-bs-theme='dark'] .sudoku-thick-bottom {
 html[data-bs-theme='dark'] .sudoku-given {
   background: #343a40;
   color: #f8f9fa;
+}
+
+html[data-bs-theme='dark'] .sudoku-verified {
+  background: #1e3d2f;
+  color: #9fd4b8;
 }
 
 html[data-bs-theme='dark'] .sudoku-editable {

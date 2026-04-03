@@ -102,6 +102,15 @@ html[data-bs-theme='dark'] body {
   }
 }
 
+/* Úvodní modal — nad fixní lištou (1040) a nápovědou buňky */
+.ui-welcome-modal__backdrop {
+  z-index: 1070;
+}
+
+.ui-welcome-modal.modal {
+  z-index: 1071;
+}
+
 .app-top-controls {
   position: fixed;
   top: var(--app-top-inset);

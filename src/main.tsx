@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'react-toastify/dist/ReactToastify.css'
 import { AppTopBar } from './components/AppTopBar'
+import { UiWelcomeModal } from './components/UiWelcomeModal'
 import { ToastHost } from './components/ToastHost'
 import { I18nProvider } from './i18n/I18nProvider'
 import { BoxTooltipPreferenceProvider } from './preferences/BoxTooltipPreferenceContext'
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')!).render(
       <I18nProvider>
         <ThemeProvider>
           <BoxTooltipPreferenceProvider>
+            <UiWelcomeModal />
             <AppTopBar />
             <App />
           </BoxTooltipPreferenceProvider>

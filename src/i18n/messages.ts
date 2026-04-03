@@ -38,6 +38,15 @@ export type MessageTree = {
     boxTooltipOnAria: string
     boxTooltipOffAria: string
   }
+  onboarding: {
+    title: string
+    intro: string
+    itemLang: string
+    itemHint: string
+    itemTheme: string
+    dismiss: string
+    closeAria: string
+  }
 }
 
 export const messages: Record<Locale, MessageTree> = {
@@ -91,6 +100,19 @@ export const messages: Record<Locale, MessageTree> = {
       boxTooltipOnAria: 'Zapnout zobrazení chybějících číslic v označeném 3×3 bloku',
       boxTooltipOffAria: 'Vypnout nápovědu u políčka',
     },
+    onboarding: {
+      title: 'Ovládání vpravo nahoře',
+      intro:
+        'Ve fixní liště v pravém horním rohu jsou tři přepínače (zleva doprava):',
+      itemLang:
+        'Jazyk — tlačítka CZ / EN / SK mění jazyk rozhraní. Volba se ukládá v prohlížeči.',
+      itemHint:
+        'Nápověda u bloku — kulaté tlačítko s mřížkou zapíná nebo vypíná bublinu nad vybraným políčkem s číslicemi, které v daném 3×3 bloku ještě chybí. Také se ukládá v prohlížeči.',
+      itemTheme:
+        'Vzhled — tlačítko se sluncem nebo měsícem přepíná světlý a tmavý režim. Ukládá se v prohlížeči.',
+      dismiss: 'Rozumím',
+      closeAria: 'Zavřít úvodní nápovědu',
+    },
   },
   en: {
     home: {
@@ -142,6 +164,18 @@ export const messages: Record<Locale, MessageTree> = {
       boxTooltipOnAria: 'Show which digits are still missing in the 3×3 box',
       boxTooltipOffAria: 'Hide the hint above the selected cell',
     },
+    onboarding: {
+      title: 'Top-right controls',
+      intro: 'The fixed bar in the top-right has three controls (left to right):',
+      itemLang:
+        'Language — CZ / EN / SK switches the UI language. The choice is saved in the browser.',
+      itemHint:
+        'Box hint — the round grid button toggles the bubble above the selected cell listing digits still missing in that 3×3 box. Also saved in the browser.',
+      itemTheme:
+        'Theme — the sun/moon button switches light and dark mode. Saved in the browser.',
+      dismiss: 'Got it',
+      closeAria: 'Close welcome hints',
+    },
   },
   sk: {
     home: {
@@ -192,6 +226,19 @@ export const messages: Record<Locale, MessageTree> = {
       boxTooltipOffTitle: 'Vypnúť nápovedu pri bloku',
       boxTooltipOnAria: 'Zapnúť zobrazenie chýbajúcich číslic v označenom 3×3 bloku',
       boxTooltipOffAria: 'Vypnúť nápovedu pri políčku',
+    },
+    onboarding: {
+      title: 'Ovládanie vpravo hore',
+      intro:
+        'V fixnom pruhu v pravom hornom rohu sú tri prepínače (zľava doprava):',
+      itemLang:
+        'Jazyk — tlačidlá CZ / EN / SK menia jazyk rozhrania. Voľba sa ukladá v prehliadači.',
+      itemHint:
+        'Nápoveda pri bloku — okrúhle tlačidlo s mriežkou zapína alebo vypína bublinu nad vybraným políčkom s číslicami, ktoré v danom 3×3 bloku ešte chýbajú. Ukladá sa tiež v prehliadači.',
+      itemTheme:
+        'Vzhľad — tlačidlo so slnkom alebo mesiacom prepína svetlý a tmavý režim. Ukladá sa v prehliadači.',
+      dismiss: 'Rozumiem',
+      closeAria: 'Zavrieť úvodnú nápovedu',
     },
   },
 }

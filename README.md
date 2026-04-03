@@ -7,6 +7,16 @@ Jednoduchá webová aplikace na hraní klasického Sudoku (9×9). Projekt vznikl
 - **React** + **TypeScript** + **Vite**
 - **Bootstrap** pro rozhraní, **React Router** pro stránky, lokalizace CZ / EN / SK, tmavý a světlý režim
 
+## Přepínače vpravo nahoře
+
+Ve **fixní liště** v pravém horním rohu (nad obsahem stránky) jsou tři ovládací prvky zleva doprava:
+
+| Prvek | Funkce |
+|--------|--------|
+| **Jazyk** | Tři tlačítka **CZ / EN / SK** — přepínají jazyk rozhraní (texty tlačítek, nápovědy, hlášky). Volba se ukládá do prohlížeče (`localStorage`). |
+| **Nápověda u bloku** | Kulaté tlačítko s ikonou **mřížky** — zapne nebo vypne **bublinu nad vybraným políčkem** s přehledem číslic, které v daném 3×3 bloku ještě nejsou vyplněné. Ve vypnutém stavu je tlačítko šedé, ve zapnutém zvýrazněné (modrý obrys). Nastavení se ukládá do `localStorage`. |
+| **Režim zobrazení** | Kulaté tlačítko se sluncem / měsícem — přepíná **světlý** a **tmavý** motiv (barvy pozadí a mřížky). Volba se ukládá do `localStorage`. |
+
 ## Spuštění
 
 ```bash

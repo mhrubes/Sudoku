@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { createPortal } from 'react-dom'
 import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { getSequentialCheckLimit } from '../config'
@@ -40,6 +48,24 @@ function getSequentialStepDelays(cellCount: number): {
   }
 }
 
+/** Číslice 1–9, které ještě v daném 3×3 bloku nejsou (podle aktuálních hodnot). */
+function getMissingDigitsInBox(values: number[][], r: number, c: number): number[] {
+  const br = Math.floor(r / 3) * 3
+  const bc = Math.floor(c / 3) * 3
+  const present = new Set<number>()
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      const v = values[br + i][bc + j]
+      if (v !== 0) present.add(v)
+    }
+  }
+  const missing: number[] = []
+  for (let d = 1; d <= 9; d++) {
+    if (!present.has(d)) missing.push(d)
+  }
+  return missing
+}
+
 type SeqHint = 'ok' | 'bad'
 
 function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
@@ -76,6 +102,12 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   )
   const [elapsedSec, setElapsedSec] = useState(0)
   const seqTimersRef = useRef<number[]>([])
+  const selectedBtnRef = useRef<HTMLButtonElement | null>(null)
+  const [boxTooltipPos, setBoxTooltipPos] = useState<{
+    top: number
+    left: number
+    transform: string
+  } | null>(null)
 
   useEffect(() => {
     if (isSolved) return
@@ -181,6 +213,50 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
     }
     return n
   }, [isImmutable, values])
+
+  const missingInBox = useMemo(() => {
+    if (!selected) return []
+    return getMissingDigitsInBox(values, selected[0], selected[1])
+  }, [selected, values])
+
+  const showBoxTooltip =
+    selected !== null &&
+    !locked &&
+    !isImmutable[selected[0]][selected[1]]
+
+  useLayoutEffect(() => {
+    if (!showBoxTooltip) {
+      setBoxTooltipPos(null)
+      return
+    }
+    const btn = selectedBtnRef.current
+    if (!btn) {
+      setBoxTooltipPos(null)
+      return
+    }
+    const update = () => {
+      const el = selectedBtnRef.current
+      if (!el) return
+      const br = el.getBoundingClientRect()
+      const estH = 48
+      const margin = 8
+      const placeAbove = br.top >= estH + margin + 24
+      const top = placeAbove ? br.top - margin : br.bottom + margin
+      const transform = placeAbove ? 'translate(-50%, -100%)' : 'translate(-50%, 0)'
+      let left = br.left + br.width / 2
+      left = Math.max(40, Math.min(window.innerWidth - 40, left))
+      setBoxTooltipPos({ top, left, transform })
+    }
+    update()
+    const raf = requestAnimationFrame(update)
+    window.addEventListener('resize', update)
+    window.addEventListener('scroll', update, true)
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', update)
+      window.removeEventListener('scroll', update, true)
+    }
+  }, [showBoxTooltip, selected, values, missingInBox])
 
   const handleCheck = useCallback(async () => {
     if (locked) return
@@ -348,13 +424,18 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
                   ? 'sudoku-verified'
                   : 'sudoku-editable'
               const show = cell !== 0 ? String(cell) : ''
+              const isSel = selected?.[0] === r && selected?.[1] === c
               return (
                 <button
                   key={`${r}-${c}`}
+                  ref={isSel ? selectedBtnRef : undefined}
                   type="button"
                   role="gridcell"
                   disabled={locked || isLocked}
                   className={`${cellClass(r, c)} ${kindClass}${hintClassFor(r, c)}`}
+                  aria-describedby={
+                    showBoxTooltip && isSel ? 'sudoku-box-tooltip' : undefined
+                  }
                   onClick={() => handleCellClick(r, c)}
                 >
                   {show}
@@ -363,6 +444,39 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
             }),
           )}
         </div>
+
+        {showBoxTooltip &&
+          boxTooltipPos &&
+          createPortal(
+            <div
+              id="sudoku-box-tooltip"
+              className="sudoku-box-tooltip"
+              role="tooltip"
+              style={{
+                position: 'fixed',
+                top: boxTooltipPos.top,
+                left: boxTooltipPos.left,
+                transform: boxTooltipPos.transform,
+                zIndex: 1060,
+              }}
+            >
+              {missingInBox.length > 0 ? (
+                <>
+                  <span className="sudoku-box-tooltip__line">
+                    {t('game.boxTooltipMissing')}
+                  </span>
+                  <span className="sudoku-box-tooltip__digits">
+                    {missingInBox.join(' · ')}
+                  </span>
+                </>
+              ) : (
+                <span className="sudoku-box-tooltip__line">
+                  {t('game.boxTooltipComplete')}
+                </span>
+              )}
+            </div>,
+            document.body,
+          )}
 
         {showNumpad && (
           <div

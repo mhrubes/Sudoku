@@ -4,7 +4,7 @@ Jednoduchá webová aplikace na hraní klasického Sudoku (9×9). Projekt vznikl
 
 ## Živá ukázka
 
-Aplikaci si můžeš rovnou vyzkoušet v prohlížeči na adrese **[mh-sudoku-ai.vercel.app](https://mh-sudoku-ai.vercel.app/)** (nasazení na Vercel).
+Aplikaci si můžeš rovnou vyzkoušet v prohlížeči na adrese <a href="https://mh-sudoku-ai.vercel.app/" target="_blank" rel="noopener noreferrer">https://mh-sudoku-ai.vercel.app/</a> — odkaz se otevře v **novém okně / záložce** (nasazení na Vercel).
 
 ## Stack
 

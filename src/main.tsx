@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import { BrowserRouter } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'react-toastify/dist/ReactToastify.css'
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
           <AppTopBar />
           <App />
           <ToastHost />
+          <SpeedInsights />
         </ThemeProvider>
       </I18nProvider>
     </BrowserRouter>

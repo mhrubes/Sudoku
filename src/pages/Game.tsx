@@ -197,18 +197,22 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
   const diffLabel = t(`difficulty.${difficulty}`)
 
   return (
-    <div className="min-vh-100 py-4 px-3">
-      <div className="container" style={{ maxWidth: 520 }}>
-        <div className="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3 pe-5">
-          <Link to="/" className="btn btn-outline-secondary btn-sm">
-            {t('game.back')}
-          </Link>
-          <span className="text-muted small">
-            {t('game.level')} {diffLabel}
-          </span>
+    <div className="py-2 py-md-4">
+      <div className="container-fluid px-2 px-sm-3 mx-auto" style={{ maxWidth: 520 }}>
+        <div className="row g-2 g-md-3 align-items-center mb-3">
+          <div className="col-12 col-md-auto">
+            <Link to="/" className="btn btn-outline-secondary btn-sm">
+              {t('game.back')}
+            </Link>
+          </div>
+          <div className="col-12 col-md text-md-end">
+            <span className="text-muted small d-block">
+              {t('game.level')} {diffLabel}
+            </span>
+          </div>
         </div>
 
-        <div className="sudoku-board mx-auto mb-4" role="grid" aria-label={t('game.grid')}>
+        <div className="sudoku-board mx-auto mb-3 mb-md-4" role="grid" aria-label={t('game.grid')}>
           {values.flatMap((row, r) =>
             row.map((cell, c) => {
               const isFixed = fixed[r][c]
@@ -229,10 +233,10 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
           )}
         </div>
 
-        <div className="d-flex justify-content-center gap-2 flex-wrap">
+        <div className="game-actions">
           <button
             type="button"
-            className="btn btn-outline-primary"
+            className="btn btn-outline-primary text-wrap"
             disabled={locked || isSolved || userFilledCount === 0}
             onClick={handleSequentialCheck}
           >
@@ -248,7 +252,9 @@ function GameSessionView({ difficulty }: { difficulty: Difficulty }) {
           </button>
         </div>
 
-        <p className="text-center text-muted small mt-3 mb-0">{t('game.help')}</p>
+        <p className="text-center text-muted small mt-3 mb-0 px-1 lh-sm game-help">
+          {t('game.help')}
+        </p>
       </div>
     </div>
   )

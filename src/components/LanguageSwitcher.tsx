@@ -12,7 +12,7 @@ export function LanguageSwitcher() {
 
   return (
     <div
-      className="btn-group btn-group-sm shadow-sm"
+      className="btn-group btn-group-sm shadow-sm lang-switcher"
       role="group"
       aria-label={t('lang.pickerAria')}
     >

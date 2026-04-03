@@ -1,11 +1,48 @@
+:root {
+  --app-top-inset: max(0.75rem, env(safe-area-inset-top, 0px));
+  --app-top-controls-h: 3rem;
+  --app-content-pad-top: calc(var(--app-top-inset) + var(--app-top-controls-h) + 0.35rem);
+  --app-pad-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+  /* Výška obsahu pod fixní lištou — nepoužívat uvnitř #root současně s min-vh-100 (způsobí scroll). */
+  --app-viewport-inner-min: calc(100dvh - var(--app-content-pad-top) - var(--app-pad-bottom));
+}
+
 #root {
-  min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
+  max-width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
+  padding-top: var(--app-content-pad-top);
+  padding-left: max(0.5rem, env(safe-area-inset-left, 0px));
+  padding-right: max(0.5rem, env(safe-area-inset-right, 0px));
+  padding-bottom: var(--app-pad-bottom);
+}
+
+@media (min-width: 576px) {
+  #root {
+    padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
+    padding-right: max(0.75rem, env(safe-area-inset-right, 0px));
+  }
+}
+
+html {
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
+  overflow-x: hidden;
+}
+
+/* Úvodní stránka: výška jen zbytek viewportu po paddingu #root (ne min-vh-100 = další +100vh). */
+.app-page-home {
+  min-height: var(--app-viewport-inner-min);
+  box-sizing: border-box;
+}
+
+.app-page-home main {
+  min-height: 0;
 }
 
 html[data-bs-theme='light'] body {
@@ -18,28 +55,90 @@ html[data-bs-theme='dark'] body {
   color: #e9ecef;
 }
 
+.home-title {
+  font-size: clamp(1.65rem, 5.5vw, 2.75rem);
+  line-height: 1.15;
+}
+
+.game-help {
+  max-width: 44rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .app-top-controls {
   position: fixed;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: var(--app-top-inset);
+  right: max(0.5rem, env(safe-area-inset-right, 0px));
   z-index: 1040;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: calc(100vw - 1rem);
+}
+
+@media (min-width: 576px) {
+  .app-top-controls {
+    gap: 0.5rem;
+    right: 0.75rem;
+  }
 }
 
 .theme-toggle-btn {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 576px) {
+  .theme-toggle-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.lang-switcher .btn {
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+  min-width: 2.25rem;
+  font-size: 0.75rem;
+}
+
+@media (min-width: 400px) {
+  .lang-switcher .btn {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    min-width: auto;
+    font-size: 0.875rem;
+  }
 }
 
 .sudoku-board {
   display: grid;
   grid-template-columns: repeat(9, minmax(0, 1fr));
-  width: min(92vw, 440px);
+  width: min(100%, 440px);
+  max-width: 100%;
   aspect-ratio: 1;
   border: 3px solid #212529;
   box-sizing: border-box;
+}
+
+.game-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 480px) {
+  .game-actions {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .sudoku-cell {
